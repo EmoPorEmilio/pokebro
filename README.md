@@ -1,4 +1,6 @@
-![PokéBro Logo](public/logo.png)
+<p align="center">
+  <img src="public/logo.png" />
+</p>
 
 # PokéBro
 
