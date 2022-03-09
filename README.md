@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/logo.png" />
+  <img src="src/resources/logo.png" />
 </p>
 
 # PokéBro
