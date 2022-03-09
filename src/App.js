@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from './resources/logo.png';
+import { MainContainer, Content } from './App.styles';
+import { Header } from './components/Header';
+import { Pokemon } from './components/Pokemon';
+import { useEffect, useState } from 'react';
+import { getRandomAvailablePokemonNumber } from './utils';
 
-function App() {
+const App = () => {
+  const [unavailablePokes, setUnavailablePokes] = useState([]);
+  
+  const [currentPokemon, setCurrentPokemon] = useState(null);
+
+  useEffect(() => {
+    let newPokes = getRandomAvailablePokemonNumber(unavailablePokes, 5);
+    console.log(newPokes);
+    setCurrentPokemon(newPokes[0]);
+    setUnavailablePokes((pokes) => pokes.concat(newPokes));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MainContainer>
+      <Header>
+        {/*<Logo>
+        </Logo>
+        <Score>
+        </Score>*/}
+      </Header>
+      <Content>
+        <Pokemon pokemonNumber={currentPokemon}></Pokemon>
+        {/*<Options></Options>*/}
+      </Content>
+    </MainContainer>
   );
 }
 
