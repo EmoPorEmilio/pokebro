@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/pokebro/static/css/main.2c291119.css",
+    "main.js": "/pokebro/static/js/main.4f161fe0.js",
+    "static/media/logo.png": "/pokebro/static/media/logo.6a1d36d69d39d7e6bf8e.png",
+    "index.html": "/pokebro/index.html",
+    "main.2c291119.css.map": "/pokebro/static/css/main.2c291119.css.map",
+    "main.4f161fe0.js.map": "/pokebro/static/js/main.4f161fe0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2c291119.css",
+    "static/js/main.4f161fe0.js"
+  ]
+}
