@@ -12,10 +12,10 @@ export const getRandomAvailablePokemonNumber = (unavailableNumbers, amount) => {
 }
 
 export const getRandomPokemonNumber = () => {
-    let stringNumber = (Math.floor(Math.random() * MAX_POKES + 1)).toString();
-    stringNumber.length === 1 && (stringNumber = '00'.concat(stringNumber));
-    stringNumber.length === 2 && (stringNumber = '0'.concat(stringNumber))
-    return stringNumber;
+    let stringPokemonNumber = (Math.floor(Math.random() * MAX_POKES + 1)).toString();
+    stringPokemonNumber.length === 1 && (stringPokemonNumber = `00${stringPokemonNumber}`);
+    stringPokemonNumber.length === 2 && (stringPokemonNumber = `0${stringPokemonNumber}`);
+    return stringPokemonNumber;
 }
 
 export const pokemonIMGURL = (pokemonNumber) => 

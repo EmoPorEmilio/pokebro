@@ -10,7 +10,6 @@ export const Pokemon = ({pokemonNumber}) => {
     const fetchPokemonImage = async () => {
         try {
             let res = await axios.get(pokemonIMGURL(pokemonNumber), {responseType: 'blob'});
-            console.log(res.data);
             setSrc(URL.createObjectURL(res.data));
         } catch (error) {
             console.log(error);
