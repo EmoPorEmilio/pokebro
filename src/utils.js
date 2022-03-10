@@ -19,4 +19,4 @@ export const getRandomPokemonNumber = () => {
 }
 
 export const pokemonIMGURL = (pokemonNumber) => 
-    `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokemonNumber}.png`
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`
