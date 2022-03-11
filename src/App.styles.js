@@ -20,4 +20,5 @@ export const Content = styled.div`
     align-content: center;
     align-items: center;
     flex-direction: column;
+    height: 79%;
 `;

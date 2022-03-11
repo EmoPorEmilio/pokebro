@@ -16,7 +16,7 @@ export const PokemonCard = styled.div`
 `;
 
 export const PokemonContainer = styled.div`
-    height: 40vh;
+    height: 40%;
     display: flex;
     justify-content: center;
     align-items: center;
