@@ -9,5 +9,5 @@ export const LogoContainer = styled.div`
 export const LogoIMG = styled.img`
     position: absolute;
     max-width: 60vw;
-    max-height: 18vh;
+    max-height: 18%;
 `;

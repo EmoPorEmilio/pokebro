@@ -5,5 +5,5 @@ export const HeaderContainer = styled.div`
     display: flex;
     flex-direction: row;
     border-bottom: 2px solid ${theme.accent};
-    height: 20vh;
+    height: 20%;
 `;
