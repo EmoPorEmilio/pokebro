@@ -3,7 +3,8 @@ import {theme} from './constants';
 
 export const MainContainer = styled.div`
     background-color: ${theme.background};
-    height: 100%;
+    min-height: 100%;
+    min-height: -webkit-fill-available;
 `;
 
 export const Header = styled.div`
