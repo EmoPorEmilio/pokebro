@@ -7,7 +7,5 @@ export const LogoContainer = styled.div`
     flex: 2;
 `;
 export const LogoIMG = styled.img`
-    position: absolute;
-    max-width: 60vw;
-    max-height: 18%;
+    max-width: 100%;
 `;
