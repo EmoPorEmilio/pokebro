@@ -12,6 +12,7 @@ export const YouLoseCard = styled.div`
     border-width: 2px;
     border-radius: 20px;
     border-style: solid;
+    max-width: 500px;
     width: 100%;
     margin: 50px;
 `;
@@ -27,5 +28,5 @@ export const YouLoseContainer = styled.div`
 
 export const YouLoseIMG = styled.img`
     position: absolute;
-    max-width: 60vw;
+    width: 100%;
 `;
