@@ -5,6 +5,9 @@ export const MainContainer = styled.div`
     background-color: ${theme.background};
     min-height: 100%;
     min-height: -webkit-fill-available;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 `;
 
 export const Header = styled.div`
@@ -17,9 +20,9 @@ export const ScoreContainer = styled.div`
 
 export const Content = styled.div`
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-content: center;
     align-items: center;
     flex-direction: column;
-    height: 79%;
+    flex: 1;
 `;
