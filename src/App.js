@@ -81,7 +81,7 @@ const App = () => {
       </Header>
       {!loading &&
       <Content>
-        {false ?
+        {HP > 0 ?
         <>
           <Pokemon pokemon={currentPokemon}></Pokemon>
           <Options handleClickOption={handleClickOption} pokemonNameOptions={pokemonNameOptions}></Options>
