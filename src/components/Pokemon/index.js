@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react"
-import { PokemonCard } from './Pokemon.styles';
+import { PokemonCard, PokemonContainer } from './Pokemon.styles';
 import { pokemonIMGURL } from '../../utils';
 
 import axios from 'axios';
 
-export const Pokemon = ({pokemonNumber}) => {
+export const Pokemon = ({pokemon}) => {
+    const number = pokemon?.number;
     const [src, setSrc] = useState(null);
 
     const fetchPokemonImage = async () => {
         try {
-            let res = await axios.get(pokemonIMGURL(pokemonNumber), {responseType: 'blob'});
+            let res = await axios.get(pokemonIMGURL(number), {responseType: 'blob'});
             setSrc(URL.createObjectURL(res.data));
         } catch (error) {
             console.log(error);
@@ -17,12 +18,14 @@ export const Pokemon = ({pokemonNumber}) => {
     }
 
     useEffect(() => {
-        if (pokemonNumber) {
+        if (number) {
             fetchPokemonImage();
         };
-    }, [pokemonNumber]);
+    }, [number]);
 
-    return <PokemonCard>
-            {src && <img src={src}/>}
-           </PokemonCard>
+    return <PokemonContainer>
+            <PokemonCard>
+                {src && <img src={src}/>}
+            </PokemonCard>
+        </PokemonContainer>
 }

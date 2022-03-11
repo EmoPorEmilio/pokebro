@@ -1,23 +1,31 @@
 import styled from 'styled-components';
 import { theme } from '../../constants';
 
-export const PokemonCard = styled.div`
+export const YouLoseCard = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-content: center;
-    flex: 1;
-    width: 200px;
+    padding: 20px;
     background-color: ${theme.cardsBackground};
     border-color: ${theme.accent};
     border-width: 2px;
     border-radius: 20px;
     border-style: solid;
+    width: 100%;
+    margin: 50px;
 `;
+;
 
-export const PokemonContainer = styled.div`
-    height: 40vh;
+export const YouLoseContainer = styled.div`
+    height: 68vh;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+`;
+
+export const YouLoseIMG = styled.img`
+    position: absolute;
+    max-width: 60vw;
 `;

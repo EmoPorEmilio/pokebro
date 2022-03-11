@@ -11,12 +11,21 @@ export const getRandomAvailablePokemonNumber = (unavailableNumbers, amount) => {
     return randomPokes;
 }
 
-export const getRandomPokemonNumber = () => {
-    let stringPokemonNumber = (Math.floor(Math.random() * MAX_POKES + 1)).toString();
-    stringPokemonNumber.length === 1 && (stringPokemonNumber = `00${stringPokemonNumber}`);
-    stringPokemonNumber.length === 2 && (stringPokemonNumber = `0${stringPokemonNumber}`);
-    return stringPokemonNumber;
-}
+export const getRandomPokemonNumber = () => (Math.floor(Math.random() * MAX_POKES + 1)).toString();
 
 export const pokemonIMGURL = (pokemonNumber) => 
     `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`
+
+export const PokemonInfoURL = (pokemonNumber) => 
+    `https://pokeapi.co/api/v2/pokemon-species/${pokemonNumber} `
+
+export const randomizePokemonList = (pokemonList) => {
+    let randomizedPokemon = [];
+    while (pokemonList.length) {
+        let pokeToPick = (Math.floor(Math.random() * pokemonList.length));
+        randomizedPokemon.push(pokemonList.splice(pokeToPick, 1)[0]);
+    }
+    return randomizedPokemon;
+}
+
+export const correctCapitalLetter = (name) => name.charAt(0).toUpperCase() + name.slice(1);
