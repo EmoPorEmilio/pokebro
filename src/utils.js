@@ -1,15 +1,23 @@
 import {MAX_POKES} from './constants';
 
-export const getRandomAvailablePokemonNumber = (unavailableNumbers, amount) => {
-    let randomPokes = [];
-    while (randomPokes.length < amount) {
-        let randomNumber = getRandomPokemonNumber();
-        if (!(unavailableNumbers.includes(randomNumber)) && !(randomPokes.includes(randomNumber))) {
-            randomPokes.push(randomNumber);
+export const getRandomAvailablePokemonNumber = (availableNumbers, amount) => {
+    let randomPokemonNumbers = [];
+    let indexToRemove = null; 
+    let count = 0; 
+    while (randomPokemonNumbers.length < amount) {
+        count++;
+        if (count > 10) return {};
+        let randomPokeIndex = Math.floor(Math.random() * availableNumbers.length);
+        indexToRemove = indexToRemove ?? randomPokeIndex;
+        let randomPoke = availableNumbers[randomPokeIndex];
+        if (arrayDoesntInclude(randomPokemonNumbers, randomPoke)) {
+            randomPokemonNumbers.push(randomPoke);
         };
     };
-    return randomPokes;
+    return {randomPokemonNumbers, indexToRemove};
 }
+
+export const arrayDoesntInclude = (array, item) => !(array.includes(item));
 
 export const getRandomPokemonNumber = () => (Math.floor(Math.random() * MAX_POKES + 1)).toString();
 

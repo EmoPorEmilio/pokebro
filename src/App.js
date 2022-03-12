@@ -3,19 +3,22 @@ import { Header } from './components/Header';
 import { Pokemon } from './components/Pokemon';
 import { Options } from './components/Options';
 import { useEffect, useState } from 'react';
-import { getRandomAvailablePokemonNumber, randomizePokemonList, PokemonInfoURL, correctCapitalLetter } from './utils';
+import { getRandomAvailablePokemonNumber, randomizePokemonList, PokemonInfoURL, pokemonIMGURL, correctCapitalLetter } from './utils';
 import { YouLose } from './components/YouLose';
 import axios from 'axios';
+import { MAX_POKES } from './constants';
 
 const App = () => {
-  const [unavailablePokes, setUnavailablePokes] = useState([]);
+  const [availablePokes, setAvailablePokes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPokemon, setCurrentPokemon] = useState(null);
+  const [currentPokemonSrc, setCurrentPokemonSrc] = useState(null);
   const [pokemonNameOptions, setPokemonNameOptions] = useState([]);
   const [HP, setHP] = useState(3);
   const [scorePoints, setScorePoints] = useState('000');
 
   const handleClickOption = (pokemon) => {
+    setLoading(true);
     if (currentPokemon.name === pokemon.name) {
       handleCorrectOption();
     }
@@ -27,7 +30,7 @@ const App = () => {
   const handleCorrectOption = () => {
     let currentPoints = parseInt(scorePoints);
     setScorePoints((currentPoints+1).toString().padStart(3, '0'))
-    goToNextLevel();
+    goToNextLevel(availablePokes);
   };
 
   const handleIncorrectOption = () => {
@@ -40,8 +43,7 @@ const App = () => {
     return {number: pokemonNumber, name: correctCapitalLetter(pokemonData.data.name)};
   };
 
-  const getLevelOptions = async () => {
-    let randomPokemonNumbers = getRandomAvailablePokemonNumber(unavailablePokes, 5);
+  const getLevelOptions = async (randomPokemonNumbers) => {
     let randomPokemon = [];
      
     try {
@@ -52,42 +54,58 @@ const App = () => {
     return Promise.all(randomPokemon);
   }
 
-  const goToNextLevel = async () => {
-    setLoading(true);
-    let newPokes = await getLevelOptions();
-    let pokemonToGuess = newPokes[0];
+  const goToNextLevel = async (setup) => {
+    let availableNumbers = setup? getInitialAvailablePokes() : availablePokes;
+    const {randomPokemonNumbers, indexToRemove} = getRandomAvailablePokemonNumber(availableNumbers, 5);
+    let newPokemons = await getLevelOptions(randomPokemonNumbers);
+    let pokemonToGuess = newPokemons[0];
     setCurrentPokemon(pokemonToGuess);
-    updateUnavailables(pokemonToGuess);
-    newPokes = randomizePokemonList(newPokes);
-    setPokemonNameOptions(newPokes);
-    setLoading(false);
+    fetchPokemonImage(pokemonToGuess.number);
+    updateAvailables(availableNumbers, indexToRemove);
+    setPokemonNameOptions(randomizePokemonList(newPokemons));
   }
 
-  const updateUnavailables = (pokemonToGuess) => {
-    let newUnavailablePokes = unavailablePokes;
-    newUnavailablePokes.push(pokemonToGuess);
-    setUnavailablePokes(newUnavailablePokes);
+  const updateAvailables = (availableNumbers, indexToRemove) => {
+    availableNumbers.splice(indexToRemove);
+    setAvailablePokes(availableNumbers);
+  }
+
+  const getInitialAvailablePokes = () => {
+    let availableNumbers = [];
+    for (let i = 1; i < MAX_POKES; i++) {
+      availableNumbers.push(i);
+    }
+    return availableNumbers;
   }
 
   useEffect(() => {
     (async () => {
-      await goToNextLevel();
+      await goToNextLevel(true);
     })();
   }, []);
+
+  const fetchPokemonImage = async (number) => {
+      try {
+          let res = await axios.get(pokemonIMGURL(number), {responseType: 'blob'});
+          setCurrentPokemonSrc(URL.createObjectURL(res.data));
+          setLoading(false);
+      } catch (error) {
+          console.log(error);
+      }
+  }
 
   return (
     <MainContainer>
       <Header HP={HP} scorePoints={scorePoints}>
       </Header>
-      {!loading &&
       <Content>
         {HP > 0 ?
         <>
-          <Pokemon pokemon={currentPokemon}></Pokemon>
-          <Options handleClickOption={handleClickOption} pokemonNameOptions={pokemonNameOptions}></Options>
+          <Pokemon loading={loading} pokemonSrc={currentPokemonSrc}></Pokemon>
+          <Options loading={loading} handleClickOption={handleClickOption} pokemonNameOptions={pokemonNameOptions}></Options>
         </>
         : <YouLose/>}
-      </Content>}
+      </Content>
     </MainContainer>
   );
 }
