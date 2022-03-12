@@ -8,6 +8,8 @@ Aplicación web para aprender información relacionada a **Pokémon**.
 
 Creada de forma interactiva en [streaming](https://twitch.tv/emoporemilio).
 
+Jugá haciendo click [ACÁ!](https://emoporemilio.github.io/pokebro/).
+
 ## Features
 
 Un modo de juego: survival
