@@ -4,14 +4,13 @@ import { Pokemon } from './components/Pokemon';
 import { Options } from './components/Options';
 import { useEffect, useState } from 'react';
 import {
-  getRandomAvailablePokemonNumber,
+  generateRandomAvailablePokemonNumber,
   randomizePokemonList,
-  PokemonInfoURL,
-  pokemonIMGURL,
   correctCapitalLetter,
+  fetchPokemonImage,
+  fetchPokemonInfo,
 } from './utils';
 import { YouLose } from './components/YouLose';
-import axios from 'axios';
 import { MAX_POKES, MAX_TRIES_IF_ERROR } from './constants';
 import { Error } from './components/Error';
 
@@ -45,20 +44,15 @@ const App = () => {
     goToNextLevel();
   };
 
-  const getPokemonInfo = async (pokemonNumber) =>
-    axios.get(PokemonInfoURL(pokemonNumber), {
-      responseType: 'json',
-    });
-
   const getLevelOptions = async (randomPokemonNumbers) => {
-    let randomPokemon = randomPokemonNumbers.map(getPokemonInfo);
+    let randomPokemon = randomPokemonNumbers.map(fetchPokemonInfo);
     return Promise.allSettled(randomPokemon);
   };
 
   const goToNextLevel = async (setup) => {
     let availableNumbers = setup ? getInitialAvailablePokes() : availablePokes;
     const { randomPokemonNumbers, indexToRemove } =
-      getRandomAvailablePokemonNumber(availableNumbers, 5);
+      generateRandomAvailablePokemonNumber(availableNumbers, 5);
     let count = 0;
     try {
       let newPokemonsRequests = await getLevelOptions(randomPokemonNumbers);
@@ -87,7 +81,9 @@ const App = () => {
           let successNewPokemons = newPokemons.map(async (pokemon, index) => {
             if (pokemon === null) {
               try {
-                let request = await getPokemonInfo(randomPokemonNumbers[index]);
+                let request = await fetchPokemonInfo(
+                  randomPokemonNumbers[index]
+                );
                 return {
                   number: randomPokemonNumbers[index],
                   name: correctCapitalLetter(request.data.name),
@@ -144,15 +140,11 @@ const App = () => {
   };
 
   useEffect(() => {
-    (async () => {
-      await goToNextLevel(true);
+    (() => {
+      let isSetup = true;
+      goToNextLevel(isSetup);
     })();
   }, []);
-
-  const fetchPokemonImage = async (number) =>
-    axios.get(pokemonIMGURL(number), {
-      responseType: 'blob',
-    });
 
   return (
     <MainContainer>
