@@ -3,6 +3,6 @@
   "name": "PokéBro",
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#ebbed2",
+  "background_color": "#202020"
 }

@@ -11,7 +11,7 @@ import {
   fetchPokemonInfo,
 } from './utils';
 import { YouLose } from './components/YouLose';
-import { MAX_POKES, MAX_TRIES_IF_ERROR } from './constants';
+import { MAX_POKES, MAX_TRIES_IF_ERROR, ERROR_MESSAGES } from './constants';
 import { Error } from './components/Error';
 
 const App = () => {
@@ -54,76 +54,68 @@ const App = () => {
     const { randomPokemonNumbers, indexToRemove } =
       generateRandomAvailablePokemonNumber(availableNumbers, 5);
     let count = 0;
-    try {
-      let newPokemonsRequests = await getLevelOptions(randomPokemonNumbers);
-      let allPokemonInfoIsHere = true;
-      let newPokemons = newPokemonsRequests.map((promise, index) => {
-        try {
-          return {
-            number: randomPokemonNumbers[index],
-            name: correctCapitalLetter(promise.value.data.name),
-          };
-        } catch (error) {
-          allPokemonInfoIsHere = false;
-          return null;
-        }
-      });
+    let newPokemonsRequests = await getLevelOptions(randomPokemonNumbers);
+    let allPokemonInfoIsHere = true;
+    let newPokemons = newPokemonsRequests.map((promise, index) => {
+      try {
+        return {
+          number: randomPokemonNumbers[index],
+          name: correctCapitalLetter(promise.value.data.name),
+        };
+      } catch (error) {
+        allPokemonInfoIsHere = false;
+        return null;
+      }
+    });
 
-      while (!allPokemonInfoIsHere) {
-        if (count === MAX_TRIES_IF_ERROR) {
-          setErrorMessage(
-            'Los Pokémon se liberaron y están causando estragos :( Vuelve más tarde.'
-          );
-          return;
-        } else {
-          count++;
-          allPokemonInfoIsHere = true;
-          let successNewPokemons = newPokemons.map(async (pokemon, index) => {
-            if (pokemon === null) {
-              try {
-                let request = await fetchPokemonInfo(
-                  randomPokemonNumbers[index]
-                );
-                return {
-                  number: randomPokemonNumbers[index],
-                  name: correctCapitalLetter(request.data.name),
-                };
-              } catch (error) {
-                allPokemonInfoIsHere = false;
-                return null;
-              }
-            } else {
-              return pokemon;
+    while (!allPokemonInfoIsHere) {
+      if (count === MAX_TRIES_IF_ERROR) {
+        setErrorMessage(ERROR_MESSAGES.NO_POKEMON_NAMES);
+        return;
+      } else {
+        count++;
+        allPokemonInfoIsHere = true;
+        let successNewPokemons = newPokemons.map(async (pokemon, index) => {
+          if (pokemon === null) {
+            try {
+              let request = await fetchPokemonInfo(randomPokemonNumbers[index]);
+              return {
+                number: randomPokemonNumbers[index],
+                name: correctCapitalLetter(request.data.name),
+              };
+            } catch (error) {
+              allPokemonInfoIsHere = false;
+              return null;
             }
-          });
-          newPokemons = successNewPokemons;
-        }
+          } else {
+            return pokemon;
+          }
+        });
+        newPokemons = successNewPokemons;
       }
-      let pokemonToGuess = newPokemons[0];
-      setCurrentPokemon(pokemonToGuess);
+    }
+    let pokemonToGuess = newPokemons[0];
+    setCurrentPokemon(pokemonToGuess);
 
-      count = 0;
-      let imgSrc = null;
-      while (!imgSrc) {
-        if (count === MAX_TRIES_IF_ERROR) {
-          setErrorMessage(
-            'El Pokémon está tímido y no sale :( Vuelve más tarde.'
-          );
-          return;
-        } else {
-          count++;
-          try {
-            let res = await fetchPokemonImage(randomPokemonNumbers[0]);
-            imgSrc = URL.createObjectURL(res.data);
-          } catch (error) {}
-        }
+    count = 0;
+    let imgSrc = null;
+    while (!imgSrc) {
+      if (count === MAX_TRIES_IF_ERROR) {
+        setErrorMessage(ERROR_MESSAGES.NO_POKEMON_IMAGE);
+        return;
+      } else {
+        count++;
+        try {
+          let res = await fetchPokemonImage(randomPokemonNumbers[0]);
+          imgSrc = URL.createObjectURL(res.data);
+        } catch (error) {}
       }
-      setCurrentPokemonSrc(imgSrc);
-      setLoading(false);
+    }
+    setCurrentPokemonSrc(imgSrc);
+    setLoading(false);
 
-      updateAvailables(availableNumbers, indexToRemove);
-      setPokemonNameOptions(randomizePokemonList(newPokemons));
-    } catch (error) {}
+    updateAvailables(availableNumbers, indexToRemove);
+    setPokemonNameOptions(randomizePokemonList(newPokemons));
   };
 
   const updateAvailables = (availableNumbers, indexToRemove) => {
