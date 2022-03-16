@@ -1,14 +1,10 @@
 import styled from 'styled-components';
 import { theme } from '../../constants';
 
-const correctOptionStyle = (props) => {};
-
-const incorrectOptionStyle = () => {};
-
 export const Option = styled.div`
   display: flex;
   border-radius: 8px;
-  height: 50px;
+  min-height: 50px;
   margin: 10px;
   width: 100%;
   background-color: ${theme.cardsBackground};
@@ -29,6 +25,7 @@ export const Option = styled.div`
       : ''}}
   
   font-weight: 400;
+  text-align: center;
   font-size: 25px;
   ${(props) => (props.correct ? 'color: #83f1a7; border-color: #83f1a7' : '')}
   ${(props) => (props.incorrect ? 'color: #e74c3c; border-color: #e74c3c' : '')}

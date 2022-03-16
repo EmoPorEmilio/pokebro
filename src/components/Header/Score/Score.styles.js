@@ -1,15 +1,32 @@
 import styled from 'styled-components';
 import { theme } from '../../../constants';
 
+export const BackArrow = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+`;
+
+export const ArrowIcon = styled.svg`
+  width: auto;
+  height: 100%;
+  fill: ${theme.accent};
+  :hover {
+    cursor: pointer;
+    fill: ${theme.backgroundLight};
+  }
+`;
+
 export const ScoreContainer = styled.div`
   display: flex;
-  flex-direction: column;
   flex: 1;
+  margin: 20px;
 `;
 export const HealthPoints = styled.div`
   display: flex;
   justify-content: center;
-  align-items: start;
+  align-items: center;
   flex: 1;
 `;
 export const ScorePoints = styled.div`

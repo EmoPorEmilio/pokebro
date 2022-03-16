@@ -15,3 +15,8 @@ export const ERROR_MESSAGES = {
   NO_POKEMON_NAMES:
     'Los Pokémon se liberaron y están causando estragos :( Vuelve más tarde.',
 };
+
+export const SYSTEM_MESSAGES = {
+  RETRY: '¿Reintentar?',
+  UNAVAILABLE: '¡Próximamente! :)',
+};

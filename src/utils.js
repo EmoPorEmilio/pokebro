@@ -4,6 +4,7 @@ export const generateRandomAvailablePokemonNumber = (
   availableNumbers,
   amount
 ) => {
+  console.log('test');
   let randomPokemonNumbers = [];
   let indexToRemove = null;
   while (randomPokemonNumbers.length < amount) {

@@ -9,8 +9,7 @@ import {
   fetchPokemonInfo,
 } from '../../utils';
 import { MAX_POKES, MAX_TRIES_IF_ERROR, ERROR_MESSAGES } from '../../constants';
-
-export const PokemonGuesserScene = ({
+export const PokemonGuesser = ({
   level,
   loading,
   setLoading,
@@ -117,23 +116,21 @@ export const PokemonGuesserScene = ({
   };
 
   const updateAvailables = (availableNumbers, indexToRemove) => {
-    availableNumbers.splice(indexToRemove);
+    availableNumbers.splice(indexToRemove, 1);
     setAvailablePokes(availableNumbers);
   };
 
   const getInitialAvailablePokes = () => {
     let availableNumbers = [];
-    for (let i = 1; i < MAX_POKES; i++) {
+    for (let i = 1; i <= MAX_POKES; i++) {
       availableNumbers.push(i);
     }
     return availableNumbers;
   };
 
   useEffect(() => {
-    (async () => {
-      let isSetup = true;
-      goToNextLevel(isSetup);
-    })();
+    let isSetup = level === 0;
+    goToNextLevel(isSetup);
   }, [level]);
 
   return (
