@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import { theme } from '../../constants';
 
+const correctOptionStyle = (props) => {};
+
+const incorrectOptionStyle = () => {};
+
 export const Option = styled.div`
   display: flex;
   border-radius: 8px;
@@ -14,14 +18,20 @@ export const Option = styled.div`
   border-style: solid;
   align-items: center;
   justify-content: center;
-  :hover {
+  ${(props) =>
+    !props.validation
+      ? `:hover {
     cursor: pointer;
     background-color: ${theme.accent};
     border-color: #fff;
     color: ${theme.cardsBackground};
-  }
+  }`
+      : ''}}
+  
   font-weight: 400;
   font-size: 25px;
+  ${(props) => (props.correct ? 'color: #83f1a7; border-color: #83f1a7' : '')}
+  ${(props) => (props.incorrect ? 'color: #e74c3c; border-color: #e74c3c' : '')}
 `;
 
 export const OptionLoader = styled.div`
