@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/pokebro/static/css/main.2c291119.css",
-    "main.js": "/pokebro/static/js/main.cfd7146d.js",
+    "main.js": "/pokebro/static/js/main.5286d701.js",
     "static/media/pokemon-sad.gif": "/pokebro/static/media/pokemon-sad.7f817780bb6fff936dec.gif",
     "static/media/logo.png": "/pokebro/static/media/logo.6a1d36d69d39d7e6bf8e.png",
     "static/media/pokemon-sad.jpg": "/pokebro/static/media/pokemon-sad.6c5b13a7831fa9c9633f.jpg",
     "index.html": "/pokebro/index.html",
     "main.2c291119.css.map": "/pokebro/static/css/main.2c291119.css.map",
-    "main.cfd7146d.js.map": "/pokebro/static/js/main.cfd7146d.js.map"
+    "main.5286d701.js.map": "/pokebro/static/js/main.5286d701.js.map"
   },
   "entrypoints": [
     "static/css/main.2c291119.css",
-    "static/js/main.cfd7146d.js"
+    "static/js/main.5286d701.js"
   ]
 }
