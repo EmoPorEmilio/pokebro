@@ -4,7 +4,6 @@ export const generateRandomAvailablePokemonNumber = (
   availableNumbers,
   amount
 ) => {
-  console.log('test');
   let randomPokemonNumbers = [];
   let indexToRemove = null;
   while (randomPokemonNumbers.length < amount) {
@@ -24,7 +23,7 @@ export const pokemonIMGURL = (pokemonNumber) =>
   `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
 
 export const PokemonInfoURL = (pokemonNumber) =>
-  `https://pokeapi.co/api/v2/pokemon-species/${pokemonNumber} `;
+  `https://pokeapi.co/api/v2/pokemon-species/${pokemonNumber}`;
 
 export const randomizePokemonList = (pokemonList) => {
   let randomizedPokemon = [];
@@ -47,3 +46,13 @@ export const fetchPokemonInfo = async (pokemonNumber) =>
   axios.get(PokemonInfoURL(pokemonNumber), {
     responseType: 'json',
   });
+
+export const blobToBase64 = (blob) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = function () {
+      resolve(reader.result);
+    };
+  });
+};

@@ -13,7 +13,7 @@ export const Score = ({ HP, scorePoints, returnToLanding }) => {
     <ScoreContainer>
       <BackArrow>
         <ArrowIcon
-          onClick={returnToLanding}
+          onClick={() => returnToLanding()}
           height='24px'
           viewBox='0 0 24 24'
           width='24px'>

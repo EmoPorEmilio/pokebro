@@ -1,28 +1,77 @@
 import { Pokemon } from '../../components/Pokemon';
 import { Options } from '../../components/Options';
-import { useEffect, useState } from 'react';
+import { YouLose } from '../../components/YouLose';
+import { Error } from '../../components/Error';
+import { Header } from '../../components/Header';
+import { Content } from '../../App.styles';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import {
   generateRandomAvailablePokemonNumber,
   randomizePokemonList,
   correctCapitalLetter,
   fetchPokemonImage,
   fetchPokemonInfo,
+  blobToBase64,
 } from '../../utils';
 import { MAX_POKES, MAX_TRIES_IF_ERROR, ERROR_MESSAGES } from '../../constants';
-export const PokemonGuesser = ({
-  level,
-  loading,
-  setLoading,
-  handleLifeLoss,
-  handlePointScored,
-  setErrorMessage,
-  validationState,
-  setValidationState,
-}) => {
-  const [availablePokes, setAvailablePokes] = useState([]);
-  const [currentPokemon, setCurrentPokemon] = useState(null);
-  const [currentPokemonSrc, setCurrentPokemonSrc] = useState(null);
-  const [pokemonNameOptions, setPokemonNameOptions] = useState([]);
+export const PokemonGuesser = ({ loading, setLoading, returnToLanding }) => {
+  const getStateFromStorage = useCallback(() => {
+    return {
+      fromStorage: !!localStorage.getItem('availablePokes'),
+      availablePokes: JSON.parse(
+        localStorage.getItem('availablePokes') ?? '[]'
+      ),
+      scorePoints: localStorage.getItem('scorePoints') ?? '000',
+      HP: parseInt(localStorage.getItem('HP') ?? 3),
+      currentPokemon: JSON.parse(
+        localStorage.getItem('currentPokemon') ?? null
+      ),
+      currentPokemonSrc: localStorage.getItem('currentPokemonSrc') ?? null,
+      pokemonNameOptions: JSON.parse(
+        localStorage.getItem('pokemonNameOptions') ?? '[]'
+      ),
+      level: parseInt(localStorage.getItem('level') ?? 0),
+    };
+  }, []);
+  const stateFromStorage = useMemo(() => getStateFromStorage(), []);
+  const [HP, setHP] = useState(stateFromStorage.HP);
+  const [scorePoints, setScorePoints] = useState(stateFromStorage.scorePoints);
+  const [level, setLevel] = useState(stateFromStorage.level);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [comingFromStorage, setComingFromStorage] = useState(
+    stateFromStorage.fromStorage
+  );
+  const [validationState, setValidationState] = useState(false);
+  const [availablePokes, setAvailablePokes] = useState(
+    stateFromStorage.availablePokes
+  );
+  const [currentPokemon, setCurrentPokemon] = useState(
+    stateFromStorage.currentPokemon
+  );
+  const [currentPokemonSrc, setCurrentPokemonSrc] = useState(
+    stateFromStorage.currentPokemonSrc
+  );
+  const [pokemonNameOptions, setPokemonNameOptions] = useState(
+    stateFromStorage.pokemonNameOptions
+  );
+
+  const handleAppTap = () => {
+    if (validationState) {
+      setComingFromStorage(false);
+      setLevel((prevLevel) => prevLevel + 1);
+      setValidationState(false);
+      setLoading(true);
+    }
+  };
+
+  const handleLifeLoss = () => {
+    setHP((prevHP) => prevHP - 1);
+  };
+
+  const handlePointScored = () =>
+    setScorePoints((currentPoints) =>
+      (parseInt(currentPoints) + 1).toString().padStart(3, '0')
+    );
 
   const handleClickOption = (pokemon) => {
     setValidationState(true);
@@ -40,6 +89,16 @@ export const PokemonGuesser = ({
   const handleIncorrectOption = () => {
     handleLifeLoss();
   };
+
+  const restartGame = () => {
+    setLevel(0);
+    setHP(3);
+    setScorePoints('000');
+    setValidationState(false);
+    setLoading(true);
+  };
+
+  const isHealthZero = HP === 0;
 
   const getLevelOptions = async (randomPokemonNumbers) => {
     let randomPokemon = randomPokemonNumbers.map(fetchPokemonInfo);
@@ -104,20 +163,43 @@ export const PokemonGuesser = ({
         count++;
         try {
           let res = await fetchPokemonImage(randomPokemonNumbers[0]);
-          imgSrc = URL.createObjectURL(res.data);
+          imgSrc = await blobToBase64(res.data);
         } catch (error) {}
       }
     }
     setCurrentPokemonSrc(imgSrc);
     setLoading(false);
 
-    updateAvailables(availableNumbers, indexToRemove);
-    setPokemonNameOptions(randomizePokemonList(newPokemons));
+    let newAvailableNumbers = updateAvailables(availableNumbers, indexToRemove);
+    let newRandomPokes = randomizePokemonList(newPokemons);
+    setPokemonNameOptions(newRandomPokes);
+    saveGameStateToStorage(
+      newAvailableNumbers,
+      pokemonToGuess,
+      imgSrc,
+      newRandomPokes
+    );
+  };
+
+  const saveGameStateToStorage = (
+    newAvailableNumbers,
+    pokemonToGuess,
+    imgSrc,
+    newPokemons
+  ) => {
+    localStorage.setItem('availablePokes', JSON.stringify(newAvailableNumbers));
+    localStorage.setItem('scorePoints', scorePoints);
+    localStorage.setItem('HP', HP);
+    localStorage.setItem('currentPokemon', JSON.stringify(pokemonToGuess));
+    localStorage.setItem('currentPokemonSrc', imgSrc);
+    localStorage.setItem('pokemonNameOptions', JSON.stringify(newPokemons));
+    localStorage.setItem('level', level);
   };
 
   const updateAvailables = (availableNumbers, indexToRemove) => {
     availableNumbers.splice(indexToRemove, 1);
     setAvailablePokes(availableNumbers);
+    return availableNumbers;
   };
 
   const getInitialAvailablePokes = () => {
@@ -130,18 +212,41 @@ export const PokemonGuesser = ({
 
   useEffect(() => {
     let isSetup = level === 0;
-    goToNextLevel(isSetup);
+    if (!comingFromStorage) {
+      goToNextLevel(isSetup);
+    } else {
+      setLoading(false);
+    }
   }, [level]);
+
+  useEffect(() => {
+    if (HP === 0) setValidationState(false);
+  }, [HP]);
 
   return (
     <>
-      <Pokemon loading={loading} pokemonSrc={currentPokemonSrc}></Pokemon>
-      <Options
-        correctNameOption={currentPokemon?.name}
-        validation={validationState}
-        loading={loading}
-        handleClickOption={handleClickOption}
-        pokemonNameOptions={pokemonNameOptions}></Options>
+      <Header
+        returnToLanding={returnToLanding}
+        inGame={true}
+        HP={HP}
+        scorePoints={scorePoints}></Header>
+      <Content onClick={handleAppTap}>
+        {isHealthZero ? (
+          <YouLose restartGame={restartGame} />
+        ) : errorMessage ? (
+          <Error message={errorMessage}></Error>
+        ) : (
+          <>
+            <Pokemon loading={loading} pokemonSrc={currentPokemonSrc}></Pokemon>
+            <Options
+              correctNameOption={currentPokemon?.name}
+              validation={validationState}
+              loading={loading}
+              handleClickOption={handleClickOption}
+              pokemonNameOptions={pokemonNameOptions}></Options>
+          </>
+        )}
+      </Content>
     </>
   );
 };
