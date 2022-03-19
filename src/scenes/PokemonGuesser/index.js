@@ -15,7 +15,7 @@ import {
 } from '../../utils';
 import { MAX_POKES, MAX_TRIES_IF_ERROR, ERROR_MESSAGES } from '../../constants';
 export const PokemonGuesser = ({ loading, setLoading, returnToLanding }) => {
-  const getStateFromStorage = useCallback(() => {
+  const getStateFromStorage = () => {
     return {
       fromStorage: !!localStorage.getItem('availablePokes'),
       availablePokes: JSON.parse(
@@ -32,8 +32,8 @@ export const PokemonGuesser = ({ loading, setLoading, returnToLanding }) => {
       ),
       level: parseInt(localStorage.getItem('level') ?? 0),
     };
-  }, []);
-  const stateFromStorage = useMemo(() => getStateFromStorage(), []);
+  };
+  const stateFromStorage = getStateFromStorage();
   const [HP, setHP] = useState(stateFromStorage.HP);
   const [scorePoints, setScorePoints] = useState(stateFromStorage.scorePoints);
   const [level, setLevel] = useState(stateFromStorage.level);
@@ -65,13 +65,22 @@ export const PokemonGuesser = ({ loading, setLoading, returnToLanding }) => {
   };
 
   const handleLifeLoss = () => {
-    setHP((prevHP) => prevHP - 1);
+    setHP((prevHP) => {
+      let newHP = prevHP - 1;
+      newHP === 0
+        ? removeGameStateFromStorage()
+        : localStorage.setItem('HP', newHP);
+      return newHP;
+    });
   };
 
-  const handlePointScored = () =>
-    setScorePoints((currentPoints) =>
-      (parseInt(currentPoints) + 1).toString().padStart(3, '0')
-    );
+  const handlePointScored = () => {
+    setScorePoints((prevPoints) => {
+      let newPoints = (parseInt(prevPoints) + 1).toString().padStart(3, '0');
+      localStorage.setItem('currentPoints', newPoints);
+      return newPoints;
+    });
+  };
 
   const handleClickOption = (pokemon) => {
     setValidationState(true);
@@ -96,6 +105,7 @@ export const PokemonGuesser = ({ loading, setLoading, returnToLanding }) => {
     setScorePoints('000');
     setValidationState(false);
     setLoading(true);
+    setComingFromStorage(false);
   };
 
   const isHealthZero = HP === 0;
@@ -194,6 +204,16 @@ export const PokemonGuesser = ({ loading, setLoading, returnToLanding }) => {
     localStorage.setItem('currentPokemonSrc', imgSrc);
     localStorage.setItem('pokemonNameOptions', JSON.stringify(newPokemons));
     localStorage.setItem('level', level);
+  };
+
+  const removeGameStateFromStorage = () => {
+    localStorage.removeItem('availablePokes');
+    localStorage.removeItem('scorePoints');
+    localStorage.removeItem('HP');
+    localStorage.removeItem('currentPokemon');
+    localStorage.removeItem('currentPokemonSrc');
+    localStorage.removeItem('pokemonNameOptions');
+    localStorage.removeItem('level');
   };
 
   const updateAvailables = (availableNumbers, indexToRemove) => {
