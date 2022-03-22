@@ -116,9 +116,10 @@ export const PokemonGuesser = ({ returnToLanding }) => {
     return Promise.allSettled(randomPokemon);
   };
 
-  const goToNextLevel = async (setup) => {
-    console.log('test');
-    let availableNumbers = setup ? getInitialAvailablePokes() : availablePokes;
+  const loadNewLevel = async (firstSetup) => {
+    let availableNumbers = firstSetup
+      ? getInitialAvailablePokes()
+      : availablePokes;
     const { randomPokemonNumbers, indexToRemove } =
       generateRandomAvailablePokemonNumber(availableNumbers, 5);
     let count = 0;
@@ -244,20 +245,11 @@ export const PokemonGuesser = ({ returnToLanding }) => {
     return availableNumbers;
   };
 
-  /*useEffect(() => {
-    let isSetup = level === 0;
-    if (!comingFromStorage) {
-      goToNextLevel(isSetup);
-    } else {
-      setGameState(GAME_STATES.LEVEL_INFO);
-    }
-  }, [level]);*/
-
   useEffect(() => {
     switch (gameState) {
       case GAME_STATES.LEVEL_LOADING:
         let isSetup = level === 0;
-        goToNextLevel(isSetup);
+        loadNewLevel(isSetup);
         break;
       case GAME_STATES.LEVEL_INFO:
         break;
