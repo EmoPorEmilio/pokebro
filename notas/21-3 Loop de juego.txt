@@ -1,0 +1,42 @@
+entro a la aplicación
+---------------------------loop
+1) nivel X, busco data y muestro
+2) hago click en una opción
+    si es correcta, paso al siguiente nivel
+    si es incorrecta, muestro el error
+       3) hago click
+       paso al siguiente nivel
+---------------------------loop
+
+estado nivel[cargando]
+   muestro "skeleton loader"
+
+estado nivel[información]
+1) tengo data en el estado o en storage?
+    si tengo: muestro eso
+    si no tengo: voy a buscar (genero 5 numeros aleatorios, 
+                               busco los nombres, busco la imagen)
+                 lo guardo en storage y lo muestro
+
+2) evento clickeó una opción:
+    reseteo información de pokes en storage
+    nivel+1, guardo en storage
+    si es la correcta: 
+                      puntos+1, guardo en storage, paso a estado "nivel[cargando]"
+    si es la incorrecta:
+                      vidas-1, guardo en storage, si está en 0: 
+                                                     paso a estado "perdió"
+                                                  si está >0:
+                                                     paso a estado "validación"
+
+3) evento clickeó estando en estado "validación"
+       paso a estado "nivel"
+       CAPAZ resetear información de pokes en memoria
+
+
+4) estado "perdió"
+       se elimina todo de storage
+
+5) click en reintentar dentro de estado "perdió"
+      paso a estado "nivel"
+      

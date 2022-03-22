@@ -20,3 +20,10 @@ export const SYSTEM_MESSAGES = {
   RETRY: '¿Reintentar?',
   UNAVAILABLE: '¡Próximamente! :)',
 };
+
+export const GAME_STATES = {
+  LEVEL_LOADING: 'loading',
+  LEVEL_INFO: 'info',
+  VALIDATION: 'validation',
+  YOU_LOSE: 'youLose',
+};

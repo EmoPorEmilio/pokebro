@@ -6,7 +6,6 @@ import { DamageCalculator } from './scenes/DamageCalculator';
 
 const App = () => {
   const [inGame, setInGame] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [inPokemonGuesser, setInPokemonGuesser] = useState(false);
   const [inDamageCalculator, setInDamageCalculator] = useState(false);
 
@@ -35,19 +34,9 @@ const App = () => {
           returnToLanding={returnToLanding}
         />
       )}
-      {inPokemonGuesser && (
-        <PokemonGuesser
-          returnToLanding={returnToLanding}
-          loading={loading}
-          setLoading={setLoading}
-        />
-      )}
+      {inPokemonGuesser && <PokemonGuesser returnToLanding={returnToLanding} />}
       {inDamageCalculator && (
-        <DamageCalculator
-          loading={loading}
-          setLoading={setLoading}
-          returnToLanding={returnToLanding}
-        />
+        <DamageCalculator returnToLanding={returnToLanding} />
       )}
     </MainContainer>
   );

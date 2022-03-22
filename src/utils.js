@@ -56,3 +56,7 @@ export const blobToBase64 = (blob) => {
     };
   });
 };
+
+export const padScorePoints = (intPoints) => {
+  return intPoints.toString().padStart(3, '0');
+};
