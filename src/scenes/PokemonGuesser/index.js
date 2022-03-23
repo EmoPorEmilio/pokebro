@@ -4,7 +4,7 @@ import { YouLose } from '../../components/YouLose';
 import { Error } from '../../components/Error';
 import { Header } from '../../components/Header';
 import { Content } from '../../App.styles';
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import {
   generateRandomAvailablePokemonNumber,
   randomizePokemonList,
@@ -36,7 +36,7 @@ export const PokemonGuesser = ({ returnToLanding }) => {
         localStorage.getItem('pokemonNameOptions') ?? '[]'
       ),
       level: parseInt(localStorage.getItem('level') ?? 0),
-      gameState: localStorage.getItem('gameState') ?? GAME_STATES.LEVEL_LOADING,
+      gameState: localStorage.getItem('gameState') ?? GAME_STATES.LEVEL_SETUP,
     };
   };
 
@@ -62,8 +62,8 @@ export const PokemonGuesser = ({ returnToLanding }) => {
   const handleAppTap = () => {
     if (gameState === GAME_STATES.VALIDATION) {
       removePokemonsFromGameState();
-      setGameState(GAME_STATES.LEVEL_LOADING);
-      localStorage.setItem('gameState', GAME_STATES.LEVEL_LOADING);
+      setGameState(GAME_STATES.LEVEL_SETUP);
+      localStorage.setItem('gameState', GAME_STATES.LEVEL_SETUP);
     }
   };
 
@@ -88,7 +88,7 @@ export const PokemonGuesser = ({ returnToLanding }) => {
       localStorage.setItem('scorePoints', newScorePoints);
       return newScorePoints;
     });
-    setGameState(GAME_STATES.LEVEL_LOADING);
+    setGameState(GAME_STATES.LEVEL_SETUP);
   };
 
   const handleIncorrectOption = () => {
@@ -108,7 +108,7 @@ export const PokemonGuesser = ({ returnToLanding }) => {
     setLevel(0);
     setHP(3);
     setScorePoints('000');
-    setGameState(GAME_STATES.LEVEL_LOADING);
+    setGameState(GAME_STATES.LEVEL_SETUP);
   };
 
   const getLevelOptions = async (randomPokemonNumbers) => {
@@ -247,7 +247,7 @@ export const PokemonGuesser = ({ returnToLanding }) => {
 
   useEffect(() => {
     switch (gameState) {
-      case GAME_STATES.LEVEL_LOADING:
+      case GAME_STATES.LEVEL_SETUP:
         let isSetup = level === 0;
         loadNewLevel(isSetup);
         break;
@@ -276,12 +276,12 @@ export const PokemonGuesser = ({ returnToLanding }) => {
         ) : (
           <>
             <Pokemon
-              loading={gameState === GAME_STATES.LEVEL_LOADING}
+              loading={gameState === GAME_STATES.LEVEL_SETUP}
               pokemonSrc={currentPokemonSrc}></Pokemon>
             <Options
               correctNameOption={currentPokemon?.name}
               validation={gameState === GAME_STATES.VALIDATION}
-              loading={gameState === GAME_STATES.LEVEL_LOADING}
+              loading={gameState === GAME_STATES.LEVEL_SETUP}
               handleClickOption={handleClickOption}
               pokemonNameOptions={pokemonNameOptions}></Options>
           </>

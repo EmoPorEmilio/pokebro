@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { types } from './data/types';
+import { TYPE_EFFECTIVENESS_OPTION } from './constants';
 
 export const generateRandomAvailablePokemonNumber = (
   availableNumbers,
@@ -59,4 +61,69 @@ export const blobToBase64 = (blob) => {
 
 export const padScorePoints = (intPoints) => {
   return intPoints.toString().padStart(3, '0');
+};
+
+export const getTypesCombinationDamageCorrectOption = (typesCombination) => {
+  let damageMultiplier = 100;
+
+  let attackType = typesCombination[0];
+  let firstDefense = typesCombination[1];
+  let secondDefense = typesCombination[2];
+
+  let damageRelations = types[attackType].damage_relations;
+  let noDamageToList = damageRelations.no_damage_to;
+  let halfDamageToList = damageRelations.half_damage_to;
+  let doubleDamageToList = damageRelations.double_damage_to;
+
+  for (let i = 0; i < noDamageToList.length; i++) {
+    if (
+      noDamageToList[i].name === types[firstDefense].name ||
+      noDamageToList[i].name === types[secondDefense]?.name
+    ) {
+      damageMultiplier = 0;
+    }
+  }
+
+  for (let i = 0; i < halfDamageToList.length; i++) {
+    if (halfDamageToList[i].name === types[firstDefense].name) {
+      damageMultiplier = damageMultiplier / 2;
+    }
+    if (halfDamageToList[i].name === types[secondDefense]?.name) {
+      damageMultiplier = damageMultiplier / 2;
+    }
+  }
+
+  for (let i = 0; i < doubleDamageToList.length; i++) {
+    if (doubleDamageToList[i].name === types[firstDefense].name) {
+      damageMultiplier = damageMultiplier * 2;
+    }
+    if (doubleDamageToList[i].name === types[secondDefense]?.name) {
+      damageMultiplier = damageMultiplier * 2;
+    }
+  }
+
+  switch (damageMultiplier) {
+    case 0:
+      return TYPE_EFFECTIVENESS_OPTION.NO_DAMAGE;
+    case 25:
+      return TYPE_EFFECTIVENESS_OPTION.QUARTER_DAMAGE;
+    case 50:
+      return TYPE_EFFECTIVENESS_OPTION.HALF_DAMAGE;
+    case 100:
+      return TYPE_EFFECTIVENESS_OPTION.REGULAR_DAMAGE;
+    case 200:
+      return TYPE_EFFECTIVENESS_OPTION.DOUBLE_DAMAGE;
+    case 400:
+      return TYPE_EFFECTIVENESS_OPTION.QUADRUPLE_DAMAGE;
+  }
+};
+
+export const generateRandomAvailableTypeCombination = (
+  availableTypeCombinations
+) => {
+  let randomTypeIndex = Math.floor(
+    Math.random() * availableTypeCombinations.length
+  );
+  let randomTypeCombination = availableTypeCombinations[randomTypeIndex];
+  return { randomTypeCombination, randomTypeIndex };
 };

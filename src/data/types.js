@@ -1,22 +1,9 @@
-import axios from 'axios';
-
-export const getTypes = async () => {
-  let typesResult = [];
-  for (let i = 1; i < 19; i++) {
-    let res = await axios.get('https://pokeapi.co/api/v2/type/' + i);
-    typesResult.push({
-      id: res.data.id,
-      name: res.data.name,
-      damage_relations: res.data.damage_relations,
-    });
-  }
-  return typesResult;
-};
-
-const types = [
+export const types = [
   {
     id: 1,
     name: 'normal',
+    printName: 'NORMAL',
+    color: '#A8A878',
     damage_relations: {
       double_damage_from: [
         {
@@ -53,6 +40,8 @@ const types = [
   {
     id: 2,
     name: 'fighting',
+    printName: 'LUCHA',
+    color: '#C03028',
     damage_relations: {
       double_damage_from: [
         {
@@ -138,6 +127,8 @@ const types = [
   {
     id: 3,
     name: 'flying',
+    printName: 'VOLADOR',
+    color: '#a890f0',
     damage_relations: {
       double_damage_from: [
         {
@@ -207,6 +198,8 @@ const types = [
   {
     id: 4,
     name: 'poison',
+    printName: 'VENENO',
+    color: '#a040a0',
     damage_relations: {
       double_damage_from: [
         {
@@ -280,6 +273,8 @@ const types = [
   {
     id: 5,
     name: 'ground',
+    printName: 'TIERRA',
+    color: '#e0c068',
     damage_relations: {
       double_damage_from: [
         {
@@ -354,6 +349,8 @@ const types = [
   {
     id: 6,
     name: 'rock',
+    printName: 'ROCA',
+    color: '#b8a038',
     damage_relations: {
       double_damage_from: [
         {
@@ -434,6 +431,8 @@ const types = [
   {
     id: 7,
     name: 'bug',
+    printName: 'BICHO',
+    color: '#a8b820',
     damage_relations: {
       double_damage_from: [
         {
@@ -514,6 +513,8 @@ const types = [
   {
     id: 8,
     name: 'ghost',
+    printName: 'FANTASMA',
+    color: '#705898',
     damage_relations: {
       double_damage_from: [
         {
@@ -572,6 +573,8 @@ const types = [
   {
     id: 9,
     name: 'steel',
+    printName: 'ACERO',
+    color: '#b8b8d0',
     damage_relations: {
       double_damage_from: [
         {
@@ -673,6 +676,8 @@ const types = [
   {
     id: 10,
     name: 'fire',
+    printName: 'FUEGO',
+    color: '#f08030',
     damage_relations: {
       double_damage_from: [
         {
@@ -757,6 +762,8 @@ const types = [
   {
     id: 11,
     name: 'water',
+    printName: 'AGUA',
+    color: '#6890f0',
     damage_relations: {
       double_damage_from: [
         {
@@ -821,6 +828,8 @@ const types = [
   {
     id: 12,
     name: 'grass',
+    printName: 'PLANTA',
+    color: '#78c850',
     damage_relations: {
       double_damage_from: [
         {
@@ -913,6 +922,8 @@ const types = [
   {
     id: 13,
     name: 'electric',
+    printName: 'ELÉCTRICO',
+    color: '#f8d030',
     damage_relations: {
       double_damage_from: [
         {
@@ -970,6 +981,8 @@ const types = [
   {
     id: 14,
     name: 'psychic',
+    printName: 'PSÍQUICO',
+    color: '#f85888',
     damage_relations: {
       double_damage_from: [
         {
@@ -1027,6 +1040,8 @@ const types = [
   {
     id: 15,
     name: 'ice',
+    printName: 'HIELO',
+    color: '#98d8d8',
     damage_relations: {
       double_damage_from: [
         {
@@ -1095,6 +1110,8 @@ const types = [
   {
     id: 16,
     name: 'dragon',
+    printName: 'DRAGÓN',
+    color: '#7038f8',
     damage_relations: {
       double_damage_from: [
         {
@@ -1152,6 +1169,8 @@ const types = [
   {
     id: 17,
     name: 'dark',
+    printName: 'SINIESTRO',
+    color: '#705848',
     damage_relations: {
       double_damage_from: [
         {
@@ -1213,6 +1232,8 @@ const types = [
   {
     id: 18,
     name: 'fairy',
+    printName: 'HADA',
+    color: '#ee99ac',
     damage_relations: {
       double_damage_from: [
         {

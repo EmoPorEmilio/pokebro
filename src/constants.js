@@ -21,8 +21,17 @@ export const SYSTEM_MESSAGES = {
   UNAVAILABLE: '¡Próximamente! :)',
 };
 
+export const TYPE_EFFECTIVENESS_OPTION = {
+  QUARTER_DAMAGE: 'x1/4',
+  HALF_DAMAGE: 'x1/2',
+  NO_DAMAGE: 'x0',
+  REGULAR_DAMAGE: 'x1',
+  DOUBLE_DAMAGE: 'x2',
+  QUADRUPLE_DAMAGE: 'x4',
+};
+
 export const GAME_STATES = {
-  LEVEL_LOADING: 'loading',
+  LEVEL_SETUP: 'setup',
   LEVEL_INFO: 'info',
   VALIDATION: 'validation',
   YOU_LOSE: 'youLose',

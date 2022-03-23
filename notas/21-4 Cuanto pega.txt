@@ -1,0 +1,11 @@
+Vamos a manejar los tipos con el indice en el que aparecen en el arreglo de tipos de data/types.js, de manera tal que, por ejemplo, normal es 0, puesto que types[0] es el tipo normal.
+
+Dejamos colores de tipos en las opciones para la siguiente iteración, primero funcionalidad.
+
+Te toca un tipo vs uno/dos tipos, tenés que elegir la opción de cuánto pega.
+
+Estados: LEVEL_INFO, VALIDATING, YOU_LOSE
+
+
+
+Cómo creamos las combinaciones de tipos: para el primer tipo un foreach, para el segundo tipo un foreach, para el tercer tipo solo usamos los superiores al n del segundo foreach.
