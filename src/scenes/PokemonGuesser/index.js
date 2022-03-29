@@ -19,6 +19,7 @@ import {
   MAX_TRIES_IF_ERROR,
   ERROR_MESSAGES,
   GAME_STATES,
+  DIFFICULTY_LEVELS,
 } from '../../constants';
 export const PokemonGuesser = ({ handleHeaderBack }) => {
   const getStateFromStorage = () => {
@@ -270,7 +271,12 @@ export const PokemonGuesser = ({ handleHeaderBack }) => {
         scorePoints={scorePoints}></Header>
       <Content onClick={handleAppTap}>
         {gameState === GAME_STATES.YOU_LOSE ? (
-          <YouLose restartGame={restartGame} />
+          <YouLose
+            scorePoints={scorePoints}
+            difficulty={DIFFICULTY_LEVELS.HARD}
+            gameMode={GAME_MODES.POKEMON_GUESSER}
+            restartGame={restartGame}
+          />
         ) : errorMessage ? (
           <Error message={errorMessage}></Error>
         ) : (
