@@ -31,12 +31,14 @@ const App = () => {
         <Landing
           goToPokemonGuesser={goToPokemonGuesser}
           goToDamageCalculator={goToDamageCalculator}
-          returnToLanding={returnToLanding}
+          handleHeaderBack={returnToLanding}
         />
       )}
-      {inPokemonGuesser && <PokemonGuesser returnToLanding={returnToLanding} />}
+      {inPokemonGuesser && (
+        <PokemonGuesser handleHeaderBack={returnToLanding} />
+      )}
       {inDamageCalculator && (
-        <DamageCalculator returnToLanding={returnToLanding} />
+        <DamageCalculator handleHeaderBack={returnToLanding} />
       )}
     </MainContainer>
   );

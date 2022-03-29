@@ -1,7 +1,11 @@
 import { Header } from '../../components/Header';
 import { Content } from '../../App.styles';
 import { useState, useEffect } from 'react';
-import { GAME_STATES, TYPE_EFFECTIVENESS_OPTION } from '../../constants';
+import {
+  GAME_STATES,
+  TYPE_EFFECTIVENESS_OPTION,
+  DIFFICULTY_LEVELS,
+} from '../../constants';
 import {
   generateRandomAvailableTypeCombination,
   getTypesCombinationDamageCorrectOption,
@@ -12,22 +16,45 @@ import { YouLose } from '../../components/YouLose';
 import { TypeEffectivenessOptions } from '../../components/Options/TypeEffectivenessOptions';
 import { Error } from '../../components/Error';
 import { Types } from '../../components/Types';
+import { DifficultySelector } from './DifficultySelector';
 
-export const DamageCalculator = ({ returnToLanding }) => {
-  const [HP, setHP] = useState(3);
-  const [scorePoints, setScorePoints] = useState('000');
-  const [level, setLevel] = useState(0);
-  const [gameState, setGameState] = useState(GAME_STATES.LEVEL_SETUP);
+export const DamageCalculator = ({ handleHeaderBack }) => {
+  const getStateFromStorage = () => {
+    return {
+      HP: parseInt(localStorage.getItem('HP_DC') ?? 3),
+      scorePoints: localStorage.getItem('scorePoints_DC') ?? '000',
+      level: parseInt(localStorage.getItem('level_DC') ?? 0),
+      difficulty: localStorage.getItem('difficulty_DC') ?? null,
+      gameState:
+        localStorage.getItem('gameState_DC') ?? GAME_STATES.SELECT_DIFFICULTY,
+      availableLevelCombinations: JSON.parse(
+        localStorage.getItem('availableLevelCombinations_DC') ?? '[]'
+      ),
+      currentTypesCombination: JSON.parse(
+        localStorage.getItem('currentTypesCombination_DC') ??
+          '[null, null, null]'
+      ),
+      correctOption: localStorage.getItem('correctOption_DC') ?? null,
+    };
+  };
+
+  const stateFromStorage = getStateFromStorage();
+
+  const [HP, setHP] = useState(stateFromStorage.HP);
+  const [scorePoints, setScorePoints] = useState(stateFromStorage.scorePoints);
+  const [level, setLevel] = useState(stateFromStorage.level);
+  const [gameState, setGameState] = useState(stateFromStorage.gameState);
+  const [difficulty, setDifficulty] = useState(stateFromStorage.difficulty);
   const [errorMessage, setErrorMessage] = useState('');
   const [availableLevelCombinations, setAvailableLevelCombinations] = useState(
-    []
+    stateFromStorage.availableLevelCombinations
   );
-  const [currentTypesCombination, setCurrentTypesCombination] = useState([
-    null,
-    null,
-    null,
-  ]);
-  const [correctOption, setCorrectOption] = useState(null);
+  const [currentTypesCombination, setCurrentTypesCombination] = useState(
+    stateFromStorage.currentTypesCombination
+  );
+  const [correctOption, setCorrectOption] = useState(
+    stateFromStorage.correctOption
+  );
 
   const handleAppTap = () => {
     if (gameState === GAME_STATES.VALIDATION) {
@@ -44,6 +71,8 @@ export const DamageCalculator = ({ returnToLanding }) => {
     if (correctOption === option) {
       handleCorrectOption();
     } else {
+      localStorage.setItem('gameState_DC', GAME_STATES.LEVEL_SETUP);
+      removeLevelInfoFromStorage();
       handleIncorrectOption();
     }
   };
@@ -52,6 +81,7 @@ export const DamageCalculator = ({ returnToLanding }) => {
     removeTypesFromGameState();
     setScorePoints((prevScorePoints) => {
       let newScorePoints = padScorePoints(parseInt(prevScorePoints) + 1);
+      localStorage.setItem('scorePoints_DC', newScorePoints);
       return newScorePoints;
     });
     setGameState(GAME_STATES.LEVEL_SETUP);
@@ -60,6 +90,7 @@ export const DamageCalculator = ({ returnToLanding }) => {
   const handleIncorrectOption = () => {
     setHP((prevHP) => {
       let newHP = prevHP - 1;
+      localStorage.setItem('HP_DC', newHP);
       if (newHP === 0) {
         setGameState(GAME_STATES.YOU_LOSE);
       } else {
@@ -74,12 +105,47 @@ export const DamageCalculator = ({ returnToLanding }) => {
     setHP(3);
     setScorePoints('000');
     setGameState(GAME_STATES.LEVEL_SETUP);
-    removeTypesFromGameState();
   };
 
   const removeTypesFromGameState = () => {
     setCurrentTypesCombination([null, null, null]);
     setCorrectOption(null);
+  };
+
+  const removeLevelInfoFromStorage = () => {
+    localStorage.removeItem('currentTypesCombination_DC');
+    localStorage.removeItem('correctOption_DC');
+  };
+
+  const removeGameStateFromStorage = () => {
+    removeLevelInfoFromStorage();
+    localStorage.removeItem('gameState');
+    localStorage.removeItem('availableLevelCombinations_DC');
+    localStorage.removeItem('scorePoints_DC');
+    localStorage.removeItem('HP_DC');
+    localStorage.removeItem('level_DC');
+    localStorage.removeItem('difficulty_DC');
+  };
+
+  const saveGameStateToStorage = (
+    newAvailableNumbers,
+    newCorrectOption,
+    newCurrentTypeCombination
+  ) => {
+    localStorage.setItem('scorePoints_DC', scorePoints);
+    localStorage.setItem('HP_DC', HP);
+    localStorage.setItem('difficulty_DC', difficulty);
+    localStorage.setItem(
+      'currentTypesCombination_DC',
+      JSON.stringify(newCurrentTypeCombination)
+    );
+    localStorage.setItem('correctOption_DC', newCorrectOption);
+    localStorage.setItem(
+      'availableLevelCombinations_DC',
+      JSON.stringify(newAvailableNumbers)
+    );
+    localStorage.setItem('level_DC', level);
+    localStorage.setItem('gameState_DC', GAME_STATES.LEVEL_INFO);
   };
 
   const loadNewLevel = async (firstSetup) => {
@@ -89,7 +155,6 @@ export const DamageCalculator = ({ returnToLanding }) => {
     const { randomTypeCombination, randomTypeIndex } =
       generateRandomAvailableTypeCombination(availableTypeCombinations);
     setCurrentTypesCombination(randomTypeCombination);
-    console.log(randomTypeCombination);
     setCorrectOption(
       getTypesCombinationDamageCorrectOption(randomTypeCombination)
     );
@@ -97,6 +162,11 @@ export const DamageCalculator = ({ returnToLanding }) => {
     let newAvailableNumbers = updateAvailables(
       availableTypeCombinations,
       randomTypeIndex
+    );
+    saveGameStateToStorage(
+      newAvailableNumbers,
+      getTypesCombinationDamageCorrectOption(randomTypeCombination),
+      randomTypeCombination
     );
   };
 
@@ -108,18 +178,30 @@ export const DamageCalculator = ({ returnToLanding }) => {
 
   const getInitialAvailableTypeCombinations = () => {
     let availableNumbers = [];
-    for (let attack = 0; attack < types.length; attack++) {
-      for (let firstDefense = 0; firstDefense < types.length; firstDefense++) {
+    if (difficulty === DIFFICULTY_LEVELS.HARD) {
+      for (let attack = 0; attack < types.length; attack++) {
         for (
-          let secondDefense = firstDefense + 1;
-          secondDefense < types.length + 1;
-          secondDefense++
+          let firstDefense = 0;
+          firstDefense < types.length;
+          firstDefense++
         ) {
-          availableNumbers.push([
-            attack,
-            firstDefense,
-            types[secondDefense] ? secondDefense : null,
-          ]);
+          for (
+            let secondDefense = firstDefense + 1;
+            secondDefense < types.length;
+            secondDefense++
+          ) {
+            availableNumbers.push([attack, firstDefense, secondDefense]);
+          }
+        }
+      }
+    } else if (difficulty === DIFFICULTY_LEVELS.EASY) {
+      for (let attack = 0; attack < types.length; attack++) {
+        for (
+          let firstDefense = 0;
+          firstDefense < types.length;
+          firstDefense++
+        ) {
+          availableNumbers.push([attack, firstDefense, null]);
         }
       }
     }
@@ -127,52 +209,87 @@ export const DamageCalculator = ({ returnToLanding }) => {
   };
 
   useEffect(() => {
-    switch (gameState) {
-      case GAME_STATES.LEVEL_SETUP:
-        let isSetup = level === 0;
-        loadNewLevel(isSetup);
-        break;
-      case GAME_STATES.LEVEL_INFO:
-        break;
-      case GAME_STATES.VALIDATION:
-        break;
-      case GAME_STATES.YOU_LOSE:
-        break;
+    if (difficulty) {
+      switch (gameState) {
+        case GAME_STATES.LEVEL_SETUP:
+          let isSetup = level === 0;
+          loadNewLevel(isSetup);
+          break;
+        case GAME_STATES.LEVEL_INFO:
+          break;
+        case GAME_STATES.VALIDATION:
+          break;
+        case GAME_STATES.YOU_LOSE:
+          removeGameStateFromStorage();
+          break;
+      }
     }
-  }, [gameState]);
+  }, [gameState, difficulty]);
+
+  const easyOptions = () => [
+    TYPE_EFFECTIVENESS_OPTION.NO_DAMAGE,
+    TYPE_EFFECTIVENESS_OPTION.HALF_DAMAGE,
+    TYPE_EFFECTIVENESS_OPTION.REGULAR_DAMAGE,
+    TYPE_EFFECTIVENESS_OPTION.DOUBLE_DAMAGE,
+  ];
+
+  const hardOptions = () => [
+    TYPE_EFFECTIVENESS_OPTION.NO_DAMAGE,
+    TYPE_EFFECTIVENESS_OPTION.QUARTER_DAMAGE,
+    TYPE_EFFECTIVENESS_OPTION.HALF_DAMAGE,
+    TYPE_EFFECTIVENESS_OPTION.REGULAR_DAMAGE,
+    TYPE_EFFECTIVENESS_OPTION.DOUBLE_DAMAGE,
+    TYPE_EFFECTIVENESS_OPTION.QUADRUPLE_DAMAGE,
+  ];
+
+  const getOptions = () => {
+    return difficulty === DIFFICULTY_LEVELS.EASY
+      ? easyOptions()
+      : hardOptions();
+  };
+
+  const getGameScene = () => (
+    <>
+      <Types
+        typesCombinations={currentTypesCombination}
+        loading={gameState === GAME_STATES.LEVEL_SETUP}></Types>
+      <TypeEffectivenessOptions
+        correctOption={correctOption}
+        validation={gameState === GAME_STATES.VALIDATION}
+        loading={gameState === GAME_STATES.LEVEL_SETUP}
+        handleClickOption={handleClickOption}
+        options={getOptions()}
+      />
+    </>
+  );
+
+  const goToGame = (difficulty) => {
+    setDifficulty(difficulty);
+    setGameState(GAME_STATES.LEVEL_SETUP);
+  };
+
+  const handleHeaderBackAndResetDifficulty = () => {
+    localStorage.removeItem('difficulty');
+    handleHeaderBack();
+  };
 
   return (
     <>
       <Header
-        returnToLanding={returnToLanding}
+        handleHeaderBack={handleHeaderBackAndResetDifficulty}
         inGame={true}
         HP={HP}
         scorePoints={scorePoints}></Header>
       <Content onClick={handleAppTap}>
+        {' '}
         {gameState === GAME_STATES.YOU_LOSE ? (
           <YouLose restartGame={restartGame} />
         ) : errorMessage ? (
           <Error message={errorMessage}></Error>
+        ) : gameState === GAME_STATES.SELECT_DIFFICULTY ? (
+          <DifficultySelector goToGame={goToGame} />
         ) : (
-          <>
-            <Types
-              typesCombinations={currentTypesCombination}
-              loading={gameState === GAME_STATES.LEVEL_SETUP}></Types>
-            <TypeEffectivenessOptions
-              correctOption={correctOption}
-              validation={gameState === GAME_STATES.VALIDATION}
-              loading={gameState === GAME_STATES.LEVEL_SETUP}
-              handleClickOption={handleClickOption}
-              options={[
-                TYPE_EFFECTIVENESS_OPTION.NO_DAMAGE,
-                TYPE_EFFECTIVENESS_OPTION.QUARTER_DAMAGE,
-                TYPE_EFFECTIVENESS_OPTION.HALF_DAMAGE,
-                TYPE_EFFECTIVENESS_OPTION.REGULAR_DAMAGE,
-                TYPE_EFFECTIVENESS_OPTION.DOUBLE_DAMAGE,
-                TYPE_EFFECTIVENESS_OPTION.QUADRUPLE_DAMAGE,
-              ]}
-            />
-          </>
+          getGameScene()
         )}
       </Content>
     </>

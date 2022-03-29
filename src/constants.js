@@ -31,8 +31,14 @@ export const TYPE_EFFECTIVENESS_OPTION = {
 };
 
 export const GAME_STATES = {
+  SELECT_DIFFICULTY: 'selectDifficulty',
   LEVEL_SETUP: 'setup',
   LEVEL_INFO: 'info',
   VALIDATION: 'validation',
   YOU_LOSE: 'youLose',
+};
+
+export const DIFFICULTY_LEVELS = {
+  EASY: 'easy',
+  HARD: 'hard',
 };

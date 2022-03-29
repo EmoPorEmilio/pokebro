@@ -20,7 +20,7 @@ import {
   ERROR_MESSAGES,
   GAME_STATES,
 } from '../../constants';
-export const PokemonGuesser = ({ returnToLanding }) => {
+export const PokemonGuesser = ({ handleHeaderBack }) => {
   const getStateFromStorage = () => {
     return {
       availablePokes: JSON.parse(
@@ -264,7 +264,7 @@ export const PokemonGuesser = ({ returnToLanding }) => {
   return (
     <>
       <Header
-        returnToLanding={returnToLanding}
+        handleHeaderBack={handleHeaderBack}
         inGame={true}
         HP={HP}
         scorePoints={scorePoints}></Header>

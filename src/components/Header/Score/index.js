@@ -8,12 +8,12 @@ import {
   ArrowIcon,
 } from './Score.styles';
 
-export const Score = ({ HP, scorePoints, returnToLanding }) => {
+export const Score = ({ HP, scorePoints, handleHeaderBack }) => {
   return (
     <ScoreContainer>
       <BackArrow>
         <ArrowIcon
-          onClick={() => returnToLanding()}
+          onClick={handleHeaderBack}
           height='24px'
           viewBox='0 0 24 24'
           width='24px'>

@@ -1,26 +1,24 @@
 import { Option } from '../../components/Options/Options.styles';
-import { LandingContainer } from './Landing.styles';
+import { BodyContainer } from './../scenes.styles';
 import { Header } from '../../components/Header';
 import { Content } from '../../App.styles';
 
 export const Landing = ({
   goToPokemonGuesser,
   goToDamageCalculator,
-  returnToLanding,
-}) => {
-  return (
-    <>
-      <Header returnToLanding={returnToLanding} inGame={false}></Header>
-      <Content>
-        <LandingContainer>
-          <Option onClick={goToPokemonGuesser}>
-            <span>¿QUIÉN ES ESE POKÉMON?</span>
-          </Option>
-          <Option onClick={goToDamageCalculator}>
-            <span>¿CUÁNTO PEGA ESO?</span>
-          </Option>
-        </LandingContainer>
-      </Content>
-    </>
-  );
-};
+  handleHeaderBack,
+}) => (
+  <>
+    <Header handleHeaderBack={handleHeaderBack} inGame={false}></Header>
+    <Content>
+      <BodyContainer>
+        <Option onClick={goToPokemonGuesser}>
+          <span>¿QUIÉN ES ESE POKÉMON?</span>
+        </Option>
+        <Option onClick={goToDamageCalculator}>
+          <span>¿CUÁNTO PEGA ESO?</span>
+        </Option>
+      </BodyContainer>
+    </Content>
+  </>
+);
