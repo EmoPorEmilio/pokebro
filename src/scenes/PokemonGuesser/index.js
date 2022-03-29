@@ -20,6 +20,7 @@ import {
   ERROR_MESSAGES,
   GAME_STATES,
   DIFFICULTY_LEVELS,
+  GAME_MODES,
 } from '../../constants';
 export const PokemonGuesser = ({ handleHeaderBack }) => {
   const getStateFromStorage = () => {
