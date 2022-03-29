@@ -71,8 +71,7 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
     if (correctOption === option) {
       handleCorrectOption();
     } else {
-      localStorage.setItem('gameState_DC', GAME_STATES.LEVEL_SETUP);
-      removeLevelInfoFromStorage();
+      removeTypesFromStorage();
       handleIncorrectOption();
     }
   };
@@ -93,7 +92,9 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
       localStorage.setItem('HP_DC', newHP);
       if (newHP === 0) {
         setGameState(GAME_STATES.YOU_LOSE);
+        localStorage.removeItem('gameState');
       } else {
+        localStorage.setItem('gameState_DC', GAME_STATES.LEVEL_SETUP);
         setGameState(GAME_STATES.VALIDATION);
       }
       return newHP;
@@ -101,10 +102,16 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
   };
 
   const restartGame = () => {
+    restartGameState();
+  };
+
+  const restartGameState = () => {
+    removeGameStateFromStorage();
+    removeTypesFromGameState();
     setLevel(0);
     setHP(3);
     setScorePoints('000');
-    setGameState(GAME_STATES.LEVEL_SETUP);
+    setGameState(GAME_STATES.SELECT_DIFFICULTY);
   };
 
   const removeTypesFromGameState = () => {
@@ -112,14 +119,15 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
     setCorrectOption(null);
   };
 
-  const removeLevelInfoFromStorage = () => {
+  const removeTypesFromStorage = () => {
     localStorage.removeItem('currentTypesCombination_DC');
     localStorage.removeItem('correctOption_DC');
   };
 
   const removeGameStateFromStorage = () => {
-    removeLevelInfoFromStorage();
-    localStorage.removeItem('gameState');
+    localStorage.removeItem('currentTypesCombination_DC');
+    localStorage.removeItem('correctOption_DC');
+    localStorage.removeItem('gameState_DC');
     localStorage.removeItem('availableLevelCombinations_DC');
     localStorage.removeItem('scorePoints_DC');
     localStorage.removeItem('HP_DC');
