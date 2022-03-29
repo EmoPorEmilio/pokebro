@@ -5,6 +5,7 @@ import {
   GAME_STATES,
   TYPE_EFFECTIVENESS_OPTION,
   DIFFICULTY_LEVELS,
+  GAME_MODES,
 } from '../../constants';
 import {
   generateRandomAvailableTypeCombination,
@@ -291,7 +292,12 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
       <Content onClick={handleAppTap}>
         {' '}
         {gameState === GAME_STATES.YOU_LOSE ? (
-          <YouLose restartGame={restartGame} />
+          <YouLose
+            scorePoints={scorePoints}
+            difficulty={difficulty}
+            gameMode={GAME_MODES.DAMAGE_CALCULATOR}
+            restartGame={restartGame}
+          />
         ) : errorMessage ? (
           <Error message={errorMessage}></Error>
         ) : gameState === GAME_STATES.SELECT_DIFFICULTY ? (

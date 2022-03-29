@@ -5,10 +5,10 @@ export const DifficultySelector = ({ goToGame }) => (
   <>
     <BodyContainer>
       <Option onClick={() => goToGame(DIFFICULTY_LEVELS.EASY)}>
-        <span>FÁCIL</span>
+        <span>{DIFFICULTY_LEVELS.EASY}</span>
       </Option>
       <Option onClick={() => goToGame(DIFFICULTY_LEVELS.HARD)}>
-        <span>DÍFICIL</span>
+        <span>{DIFFICULTY_LEVELS.HARD}</span>
       </Option>
     </BodyContainer>
   </>

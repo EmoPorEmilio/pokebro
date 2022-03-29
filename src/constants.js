@@ -2,8 +2,10 @@ export const theme = {
   background: '#202020',
   backgroundLight: '#515151',
   accent: '#ebbed2',
+  accentHighlight: '#e2a2be',
   cardsBackground: '#373737',
   cardsBackgroundLoad: '#484848',
+  correct: '#83f1a7',
 };
 
 export const MAX_POKES = 898;
@@ -18,6 +20,7 @@ export const ERROR_MESSAGES = {
 
 export const SYSTEM_MESSAGES = {
   RETRY: '¿Reintentar?',
+  SHARE: 'Compartir',
   UNAVAILABLE: '¡Próximamente! :)',
 };
 
@@ -39,6 +42,11 @@ export const GAME_STATES = {
 };
 
 export const DIFFICULTY_LEVELS = {
-  EASY: 'easy',
-  HARD: 'hard',
+  EASY: 'FÁCIL',
+  HARD: 'DIFÍCIL',
+};
+
+export const GAME_MODES = {
+  DAMAGE_CALCULATOR: '¿CUÁNTO PEGA ESO?',
+  POKEMON_GUESSER: '¿QUIÉN ES ESE POKÉMON?',
 };

@@ -2,6 +2,7 @@ import { Option } from '../../components/Options/Options.styles';
 import { BodyContainer } from './../scenes.styles';
 import { Header } from '../../components/Header';
 import { Content } from '../../App.styles';
+import { GAME_MODES } from './../../constants';
 
 export const Landing = ({
   goToPokemonGuesser,
@@ -13,10 +14,10 @@ export const Landing = ({
     <Content>
       <BodyContainer>
         <Option onClick={goToPokemonGuesser}>
-          <span>¿QUIÉN ES ESE POKÉMON?</span>
+          <span>{GAME_MODES.POKEMON_GUESSER}</span>
         </Option>
         <Option onClick={goToDamageCalculator}>
-          <span>¿CUÁNTO PEGA ESO?</span>
+          <span>{GAME_MODES.DAMAGE_CALCULATOR}</span>
         </Option>
       </BodyContainer>
     </Content>
