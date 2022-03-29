@@ -22,7 +22,6 @@ export const YouLoseContainer = styled.div`
   justify-content: center;
   align-items: center;
   color: ${theme.accent};
-  font-size: 50px;
   flex-direction: column;
 `;
 
@@ -50,6 +49,7 @@ export const UIButton = styled.div`
   border-width: 2px;
   border-radius: 20px;
   border-style: solid;
+  font-size: 25px;
   background-color: ${theme.cardsBackground};
   :hover {
     background-color: ${theme.accent};
