@@ -47,8 +47,8 @@ export const YouLose = ({ restartGame, scorePoints, difficulty, gameMode }) => {
     context.strokeStyle = shareStrokeColor;
     context.font = 'normal 800 29px Jost';
     context.textAlign = 'center';
-    context.strokeText(gameMode, 196, 263);
-    context.fillText(gameMode, 196, 263);
+    context.strokeText(gameMode, 220, 263);
+    context.fillText(gameMode, 220, 263);
   };
 
   const drawDifficulty = (canvas, context) => {
