@@ -21,6 +21,7 @@ import {
   GAME_STATES,
   DIFFICULTY_LEVELS,
   GAME_MODES,
+  TIMER_INITIAL_VALUE,
 } from '../../constants';
 export const PokemonGuesser = ({ handleHeaderBack }) => {
   const getStateFromStorage = () => {
@@ -39,7 +40,7 @@ export const PokemonGuesser = ({ handleHeaderBack }) => {
       ),
       level: parseInt(localStorage.getItem('level') ?? 0),
       gameState: localStorage.getItem('gameState') ?? GAME_STATES.LEVEL_SETUP,
-      timer: parseInt(localStorage.getItem('timer') ?? 5),
+      timer: parseInt(localStorage.getItem('timer') ?? TIMER_INITIAL_VALUE),
     };
   };
 
@@ -117,7 +118,7 @@ export const PokemonGuesser = ({ handleHeaderBack }) => {
   const restartGame = () => {
     setLevel(0);
     setHP(3);
-    setTimer(100);
+    setTimer(TIMER_INITIAL_VALUE);
     startTimerCountdown();
     setScorePoints('000');
     setGameState(GAME_STATES.LEVEL_SETUP);

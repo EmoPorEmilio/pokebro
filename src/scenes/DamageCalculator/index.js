@@ -6,6 +6,7 @@ import {
   TYPE_EFFECTIVENESS_OPTION,
   DIFFICULTY_LEVELS,
   GAME_MODES,
+  TIMER_INITIAL_VALUE,
 } from '../../constants';
 import {
   generateRandomAvailableTypeCombination,
@@ -36,7 +37,7 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
           '[null, null, null]'
       ),
       correctOption: localStorage.getItem('correctOption_DC') ?? null,
-      timer: parseInt(localStorage.getItem('timer_DC') ?? 5),
+      timer: parseInt(localStorage.getItem('timer_DC') ?? TIMER_INITIAL_VALUE),
     };
   };
 
@@ -119,7 +120,7 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
     removeTypesFromGameState();
     setLevel(0);
     setHP(3);
-    setTimer(100);
+    setTimer(TIMER_INITIAL_VALUE);
     setScorePoints('000');
     setGameState(GAME_STATES.SELECT_DIFFICULTY);
   };
