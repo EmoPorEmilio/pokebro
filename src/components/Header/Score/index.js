@@ -6,9 +6,11 @@ import {
   HealthIcon,
   BackArrow,
   ArrowIcon,
+  HealthContainer,
+  Timer,
 } from './Score.styles';
 
-export const Score = ({ HP, scorePoints, handleHeaderBack }) => {
+export const Score = ({ HP, scorePoints, handleHeaderBack, timer }) => {
   return (
     <ScoreContainer>
       <BackArrow>
@@ -24,11 +26,14 @@ export const Score = ({ HP, scorePoints, handleHeaderBack }) => {
       <ScorePoints>
         <span>{scorePoints}</span>
       </ScorePoints>
-      <HealthPoints>
-        <HealthIcon off={!(HP > 0)} src={heartIcon} />
-        <HealthIcon off={!(HP > 1)} src={heartIcon} />
-        <HealthIcon off={!(HP > 2)} src={heartIcon} />
-      </HealthPoints>
+      <HealthContainer>
+        <HealthPoints>
+          <HealthIcon off={!(HP > 0)} src={heartIcon} />
+          <HealthIcon off={!(HP > 1)} src={heartIcon} />
+          <HealthIcon off={!(HP > 2)} src={heartIcon} />
+        </HealthPoints>
+        <Timer>{timer}</Timer>
+      </HealthContainer>
     </ScoreContainer>
   );
 };

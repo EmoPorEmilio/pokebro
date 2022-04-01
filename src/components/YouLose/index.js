@@ -68,17 +68,19 @@ export const YouLose = ({ restartGame, scorePoints, difficulty, gameMode }) => {
   };
 
   const exportAndShare = async () => {
-    let canvas = document.getElementById('canvasToExport');
-    let base64IMG = canvas.toDataURL('image/png', 1.0);
-    //let blobIMG = b64toBlob(base64IMG);
-    const blob = await (await fetch(base64IMG)).blob();
-    const file = new File([blob], 'fileName.png', { type: blob.type });
-    navigator.share({
-      title: 'Resultado PokéBro',
-      text: 'Me podrás ganar?',
-      files: [file],
-    });
+    try {
+      let canvas = document.getElementById('canvasToExport');
+      let base64IMG = canvas.toDataURL('image/png', 1.0);
+      const blob = await (await fetch(base64IMG)).blob();
+      const file = new File([blob], 'fileName.png', { type: blob.type });
+      navigator.share({
+        title: 'Resultado PokéBro',
+        text: 'Me podrás ganar?',
+        files: [file],
+      });
+    } catch (error) {}
   };
+
   return (
     <YouLoseContainer>
       <YouLoseCard>

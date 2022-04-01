@@ -4,7 +4,7 @@ import { YouLose } from '../../components/YouLose';
 import { Error } from '../../components/Error';
 import { Header } from '../../components/Header';
 import { Content } from '../../App.styles';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   generateRandomAvailablePokemonNumber,
   randomizePokemonList,
@@ -39,10 +39,13 @@ export const PokemonGuesser = ({ handleHeaderBack }) => {
       ),
       level: parseInt(localStorage.getItem('level') ?? 0),
       gameState: localStorage.getItem('gameState') ?? GAME_STATES.LEVEL_SETUP,
+      timer: parseInt(localStorage.getItem('timer') ?? 5),
     };
   };
 
   const stateFromStorage = getStateFromStorage();
+  const [timer, setTimer] = useState(stateFromStorage.timer);
+  const timerCountdown = useRef(null);
   const [HP, setHP] = useState(stateFromStorage.HP);
   const [scorePoints, setScorePoints] = useState(stateFromStorage.scorePoints);
   const [level, setLevel] = useState(stateFromStorage.level);
@@ -93,12 +96,17 @@ export const PokemonGuesser = ({ handleHeaderBack }) => {
     setGameState(GAME_STATES.LEVEL_SETUP);
   };
 
+  const loseGame = () => {
+    clearInterval(timerCountdown.current);
+    setGameState(GAME_STATES.YOU_LOSE);
+  };
+
   const handleIncorrectOption = () => {
     setHP((prevHP) => {
       let newHP = prevHP - 1;
       localStorage.setItem('HP', newHP);
       if (newHP === 0) {
-        setGameState(GAME_STATES.YOU_LOSE);
+        loseGame();
       } else {
         setGameState(GAME_STATES.VALIDATION);
       }
@@ -109,6 +117,8 @@ export const PokemonGuesser = ({ handleHeaderBack }) => {
   const restartGame = () => {
     setLevel(0);
     setHP(3);
+    setTimer(100);
+    startTimerCountdown();
     setScorePoints('000');
     setGameState(GAME_STATES.LEVEL_SETUP);
   };
@@ -247,6 +257,22 @@ export const PokemonGuesser = ({ handleHeaderBack }) => {
     return availableNumbers;
   };
 
+  const handleTimerCountdownInterval = () => {
+    setTimer((timer) => {
+      let newTimer = timer - 1;
+      if (newTimer <= 0) {
+        loseGame();
+      } else {
+        localStorage.setItem('timer', newTimer);
+      }
+      return newTimer;
+    });
+  };
+
+  const startTimerCountdown = () => {
+    timerCountdown.current = setInterval(handleTimerCountdownInterval, 1000);
+  };
+
   useEffect(() => {
     switch (gameState) {
       case GAME_STATES.LEVEL_SETUP:
@@ -263,13 +289,21 @@ export const PokemonGuesser = ({ handleHeaderBack }) => {
     }
   }, [gameState]);
 
+  useEffect(() => {
+    startTimerCountdown();
+    return () => {
+      clearInterval(timerCountdown.current);
+    };
+  }, []);
+
   return (
     <>
       <Header
         handleHeaderBack={handleHeaderBack}
         inGame={true}
         HP={HP}
-        scorePoints={scorePoints}></Header>
+        scorePoints={scorePoints}
+        timer={timer}></Header>
       <Content onClick={handleAppTap}>
         {gameState === GAME_STATES.YOU_LOSE ? (
           <YouLose

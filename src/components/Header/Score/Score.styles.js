@@ -47,3 +47,22 @@ export const HealthIcon = styled.img`
   max-width: 50px;
   ${(props) => (props.off ? 'opacity: 0.2' : '')}
 `;
+
+export const HealthContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+export const Timer = styled.div`
+  display: flex;
+  flex: 1;
+  color: ${theme.accent};
+  font-size: 5vw;
+  @media screen and (min-width: 900px) {
+    font-size: 50px;
+  }
+  font-weight: 300;
+  justify-content: center;
+  align-content: center;
+`;

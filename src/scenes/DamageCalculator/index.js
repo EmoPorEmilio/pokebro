@@ -1,6 +1,6 @@
 import { Header } from '../../components/Header';
 import { Content } from '../../App.styles';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   GAME_STATES,
   TYPE_EFFECTIVENESS_OPTION,
@@ -36,6 +36,7 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
           '[null, null, null]'
       ),
       correctOption: localStorage.getItem('correctOption_DC') ?? null,
+      timer: parseInt(localStorage.getItem('timer_DC') ?? 5),
     };
   };
 
@@ -44,6 +45,8 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
   const [HP, setHP] = useState(stateFromStorage.HP);
   const [scorePoints, setScorePoints] = useState(stateFromStorage.scorePoints);
   const [level, setLevel] = useState(stateFromStorage.level);
+  const timerCountdown = useRef(null);
+  const [timer, setTimer] = useState(stateFromStorage.timer);
   const [gameState, setGameState] = useState(stateFromStorage.gameState);
   const [difficulty, setDifficulty] = useState(stateFromStorage.difficulty);
   const [errorMessage, setErrorMessage] = useState('');
@@ -87,13 +90,18 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
     setGameState(GAME_STATES.LEVEL_SETUP);
   };
 
+  const loseGame = () => {
+    clearInterval(timerCountdown.current);
+    setGameState(GAME_STATES.YOU_LOSE);
+    localStorage.removeItem('gameState');
+  };
+
   const handleIncorrectOption = () => {
     setHP((prevHP) => {
       let newHP = prevHP - 1;
       localStorage.setItem('HP_DC', newHP);
       if (newHP === 0) {
-        setGameState(GAME_STATES.YOU_LOSE);
-        localStorage.removeItem('gameState');
+        loseGame();
       } else {
         localStorage.setItem('gameState_DC', GAME_STATES.LEVEL_SETUP);
         setGameState(GAME_STATES.VALIDATION);
@@ -111,6 +119,7 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
     removeTypesFromGameState();
     setLevel(0);
     setHP(3);
+    setTimer(100);
     setScorePoints('000');
     setGameState(GAME_STATES.SELECT_DIFFICULTY);
   };
@@ -126,6 +135,7 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
   };
 
   const removeGameStateFromStorage = () => {
+    localStorage.removeItem('timer_DC');
     localStorage.removeItem('currentTypesCombination_DC');
     localStorage.removeItem('correctOption_DC');
     localStorage.removeItem('gameState_DC');
@@ -275,6 +285,7 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
   const goToGame = (difficulty) => {
     setDifficulty(difficulty);
     setGameState(GAME_STATES.LEVEL_SETUP);
+    startTimerCountdown();
   };
 
   const handleHeaderBackAndResetDifficulty = () => {
@@ -282,13 +293,39 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
     handleHeaderBack();
   };
 
+  const handleTimerCountdownInterval = () => {
+    setTimer((timer) => {
+      let newTimer = timer - 1;
+      if (newTimer <= 0) {
+        loseGame();
+      } else {
+        localStorage.setItem('timer_DC', newTimer);
+      }
+      return newTimer;
+    });
+  };
+
+  const startTimerCountdown = () => {
+    timerCountdown.current = setInterval(handleTimerCountdownInterval, 1000);
+  };
+
+  useEffect(() => {
+    if (gameState !== GAME_STATES.SELECT_DIFFICULTY) {
+      startTimerCountdown();
+    }
+    return () => {
+      clearInterval(timerCountdown.current);
+    };
+  }, []);
+
   return (
     <>
       <Header
         handleHeaderBack={handleHeaderBackAndResetDifficulty}
         inGame={true}
         HP={HP}
-        scorePoints={scorePoints}></Header>
+        scorePoints={scorePoints}
+        timer={timer}></Header>
       <Content onClick={handleAppTap}>
         {' '}
         {gameState === GAME_STATES.YOU_LOSE ? (
