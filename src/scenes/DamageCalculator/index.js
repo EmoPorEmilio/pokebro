@@ -41,7 +41,22 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
     };
   };
 
-  const stateFromStorage = getStateFromStorage();
+  const initState = () => {
+    return {
+      HP: 3,
+      scorePoints: '000',
+      level: 0,
+      difficulty: null,
+      gameState: GAME_STATES.SELECT_DIFFICULTY,
+      availableLevelCombinations: [],
+      currentTypesCombination: [null, null, null],
+      correctOption: null,
+      timer: TIMER_INITIAL_VALUE,
+    };
+  };
+
+  //* dejo sin estado desde storage por un bug
+  const stateFromStorage = initState();
 
   const [HP, setHP] = useState(stateFromStorage.HP);
   const [scorePoints, setScorePoints] = useState(stateFromStorage.scorePoints);
@@ -116,8 +131,8 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
   };
 
   const restartGameState = () => {
-    removeGameStateFromStorage();
-    removeTypesFromGameState();
+    //removeGameStateFromStorage();
+    //removeTypesFromGameState();
     setLevel(0);
     setHP(3);
     setTimer(TIMER_INITIAL_VALUE);
@@ -240,7 +255,7 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
         case GAME_STATES.VALIDATION:
           break;
         case GAME_STATES.YOU_LOSE:
-          removeGameStateFromStorage();
+          //removeGameStateFromStorage();
           break;
       }
     }
@@ -290,7 +305,7 @@ export const DamageCalculator = ({ handleHeaderBack }) => {
   };
 
   const handleHeaderBackAndResetDifficulty = () => {
-    localStorage.removeItem('difficulty');
+    //localStorage.removeItem('difficulty');
     handleHeaderBack();
   };
 
